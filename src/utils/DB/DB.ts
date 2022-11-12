@@ -14,7 +14,8 @@ export default class DB {
     const proxyHandler = {
       get: (target: any, prop: any) => {
         if (typeof target[prop] === 'function') {
-          return (...args: any[]) => lodash.cloneDeep(target[prop](...args));
+          return async (...args: any[]) =>
+            lodash.cloneDeep(await target[prop](...args));
         } else {
           return target[prop];
         }
