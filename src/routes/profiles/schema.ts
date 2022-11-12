@@ -1,5 +1,3 @@
-import { MemberId } from '../../utils/DB/entities/DBMemberTypes';
-
 export const createProfileBodySchema = {
   type: 'object',
   required: [
@@ -9,7 +7,6 @@ export const createProfileBodySchema = {
     'country',
     'street',
     'city',
-    'memberType',
     'userId',
   ],
   properties: {
@@ -19,12 +16,9 @@ export const createProfileBodySchema = {
     country: { type: 'string' },
     street: { type: 'string' },
     city: { type: 'string' },
-    memberType: {
-      type: 'string',
-      enum: [MemberId.basic, MemberId.business],
-    },
     userId: { type: 'string', format: 'uuid' },
   },
+  additionalProperties: false,
 } as const;
 
 export const changeProfileBodySchema = {
@@ -36,9 +30,9 @@ export const changeProfileBodySchema = {
     country: { type: 'string' },
     street: { type: 'string' },
     city: { type: 'string' },
-    memberType: {
+    memberTypeId: {
       type: 'string',
-      enum: [MemberId.basic, MemberId.business],
     },
   },
+  additionalProperties: false,
 } as const;

@@ -3,9 +3,6 @@ export const changeMemberTypeBodySchema = {
   properties: {
     discount: { type: 'number' },
     monthPostsLimit: { type: 'number' },
-    profilesIds: {
-      type: 'array',
-      items: { type: 'string', format: 'uuid' },
-    },
   },
+  additionalProperties: false,
 } as const;

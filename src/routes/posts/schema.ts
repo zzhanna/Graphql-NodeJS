@@ -1,10 +1,12 @@
 export const createPostBodySchema = {
   type: 'object',
-  required: ['title', 'content'],
+  required: ['title', 'content', 'userId'],
   properties: {
     title: { type: 'string' },
     content: { type: 'string' },
+    userId: { type: 'string' },
   },
+  additionalProperties: false,
 } as const;
 
 export const changePostBodySchema = {
@@ -13,4 +15,5 @@ export const changePostBodySchema = {
     title: { type: 'string' },
     content: { type: 'string' },
   },
+  additionalProperties: false,
 } as const;

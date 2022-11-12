@@ -1,6 +1,5 @@
 import * as crypto from 'node:crypto';
 import DBEntity from './DBEntity';
-import { MemberId } from './DBMemberTypes';
 
 type ProfileEntity = {
   id: string;
@@ -10,10 +9,10 @@ type ProfileEntity = {
   country: string;
   street: string;
   city: string;
-  memberType: MemberId;
+  memberTypeId: string;
   userId: string;
 };
-type CreateProfileDTO = Omit<ProfileEntity, 'id'>;
+type CreateProfileDTO = Omit<ProfileEntity, 'id' | 'memberTypeId'>;
 type ChangeProfileDTO = Partial<Omit<ProfileEntity, 'id' | 'userId'>>;
 
 export default class DBProfiles extends DBEntity<
@@ -24,6 +23,7 @@ export default class DBProfiles extends DBEntity<
     const created = {
       ...createProfileDTO,
       id: crypto.randomUUID(),
+      memberTypeId: 'basic',
     };
     this.entity.push(created);
     return created;

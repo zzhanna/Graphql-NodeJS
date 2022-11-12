@@ -1,14 +1,10 @@
 import DBEntity from './DBEntity';
 
-export enum MemberId {
-  'basic' = 'basic',
-  'business' = 'business',
-}
 type MemberTypeEntity = {
-  id: MemberId;
+  id: string;
   discount: number;
   monthPostsLimit: number;
-  profilesIds: string[];
+  profileIds: string[];
 };
 type ChangeMemberTypeDTO = Partial<Omit<MemberTypeEntity, 'id'>>;
 
@@ -26,16 +22,16 @@ export default class DBMemberTypes extends DBEntity<
 
     this.entity = [
       {
-        id: MemberId.basic,
+        id: 'basic',
         discount: 0,
         monthPostsLimit: 20,
-        profilesIds: [],
+        profileIds: [],
       },
       {
-        id: MemberId.business,
+        id: 'business',
         discount: 5,
         monthPostsLimit: 100,
-        profilesIds: [],
+        profileIds: [],
       },
     ];
   }

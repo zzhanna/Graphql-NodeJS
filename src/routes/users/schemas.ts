@@ -6,6 +6,7 @@ export const createUserBodySchema = {
     lastName: { type: 'string' },
     email: { type: 'string' },
   },
+  additionalProperties: false,
 } as const;
 
 export const changeUserBodySchema = {
@@ -14,18 +15,10 @@ export const changeUserBodySchema = {
     firstName: { type: 'string' },
     lastName: { type: 'string' },
     email: { type: 'string' },
-    profileId: { type: 'string', format: 'uuid' },
     userSubscribedTo: {
       type: 'array',
       items: { type: 'string', format: 'uuid' },
     },
-    subscribedToUser: {
-      type: 'array',
-      items: { type: 'string', format: 'uuid' },
-    },
-    postIds: {
-      type: 'array',
-      items: { type: 'string', format: 'uuid' },
-    },
   },
+  additionalProperties: false,
 } as const;
