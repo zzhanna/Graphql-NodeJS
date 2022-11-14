@@ -15,7 +15,7 @@ export const changeUserBodySchema = {
     firstName: { type: 'string' },
     lastName: { type: 'string' },
     email: { type: 'string' },
-    userSubscribedTo: {
+    userSubscribedToIds: {
       type: 'array',
       items: { type: 'string', format: 'uuid' },
     },

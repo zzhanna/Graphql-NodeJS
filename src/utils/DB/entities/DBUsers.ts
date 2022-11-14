@@ -7,13 +7,13 @@ type UserEntity = {
   lastName: string;
   email: string;
   profileId: string | null;
-  userSubscribedTo: string[];
-  subscribedToUser: string[];
+  userSubscribedToIds: string[];
+  subscribedToUserIds: string[];
   postIds: string[];
 };
 type CreateUserDTO = Omit<
   UserEntity,
-  'id' | 'profileId' | 'userSubscribedTo' | 'subscribedToUser' | 'postIds'
+  'id' | 'profileId' | 'userSubscribedToIds' | 'subscribedToUserIds' | 'postIds'
 >;
 type ChangeUserDTO = Partial<Omit<UserEntity, 'id'>>;
 
@@ -23,8 +23,8 @@ export default class DBUsers extends DBEntity<UserEntity, ChangeUserDTO> {
       ...createUserDTO,
       id: crypto.randomUUID(),
       profileId: null,
-      userSubscribedTo: [],
-      subscribedToUser: [],
+      userSubscribedToIds: [],
+      subscribedToUserIds: [],
       postIds: [],
     };
     this.entity.push(created);
