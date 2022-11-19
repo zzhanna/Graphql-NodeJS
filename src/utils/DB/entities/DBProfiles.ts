@@ -12,7 +12,7 @@ type ProfileEntity = {
   memberTypeId: string;
   userId: string;
 };
-type CreateProfileDTO = Omit<ProfileEntity, 'id' | 'memberTypeId'>;
+type CreateProfileDTO = Omit<ProfileEntity, 'id'>;
 type ChangeProfileDTO = Partial<Omit<ProfileEntity, 'id' | 'userId'>>;
 
 export default class DBProfiles extends DBEntity<
@@ -23,7 +23,6 @@ export default class DBProfiles extends DBEntity<
     const created = {
       ...createProfileDTO,
       id: crypto.randomUUID(),
-      memberTypeId: 'basic',
     };
     this.entity.push(created);
     return created;

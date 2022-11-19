@@ -8,6 +8,7 @@ export const createProfileBodySchema = {
     'street',
     'city',
     'userId',
+    'memberTypeId',
   ],
   properties: {
     avatar: { type: 'string' },
@@ -17,6 +18,9 @@ export const createProfileBodySchema = {
     street: { type: 'string' },
     city: { type: 'string' },
     userId: { type: 'string', format: 'uuid' },
+    memberTypeId: {
+      type: 'string',
+    },
   },
   additionalProperties: false,
 } as const;
