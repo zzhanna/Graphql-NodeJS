@@ -42,6 +42,25 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         params: idParamSchema,
       },
     },
+  fastify.post(
+    '/:id/subscribeTo',
+    {
+      schema: {
+        body: subscribeToBodySchema,
+        params: idParamSchema,
+      },
+    },
+    async function (request, reply) {}
+  );
+
+  fastify.post(
+    '/:id/unsubscribeFrom',
+    {
+      schema: {
+        body: unsubscribeFromBodySchema,
+        params: idParamSchema,
+      },
+    },
     async function (request, reply) {}
   );
 
