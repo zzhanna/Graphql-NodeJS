@@ -1,6 +1,11 @@
 import { FastifyPluginAsyncJsonSchemaToTs } from '@fastify/type-provider-json-schema-to-ts';
 import { idParamSchema, idsQuerystringSchema } from '../../utils/reusedSchemas';
-import { createUserBodySchema, changeUserBodySchema } from './schemas';
+import {
+  createUserBodySchema,
+  changeUserBodySchema,
+  subscribeToBodySchema,
+  unsubscribeFromBodySchema,
+} from './schemas';
 
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify
@@ -42,6 +47,9 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         params: idParamSchema,
       },
     },
+    async function (request, reply) {
+    }
+  );
   fastify.post(
     '/:id/subscribeTo',
     {
