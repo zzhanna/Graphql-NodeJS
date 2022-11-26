@@ -7,7 +7,8 @@
 4. Limit the complexity of the graphql queries by their depth with "graphql-depth-limit" package.  
 
 ### Description:  
-App template made with fastify, but you don't need to know much about fastify to get the tasks done. All templates for endpoints are placed.  
+All dependencies to complete this task are already installed.  
+App template was made with fastify, but you don't need to know much about fastify to get the tasks done. All templates for endpoints are placed.  
 Use the "db" property of the "fastify" object as database ("db" is an instance of the DB class => ./src/utils/DB/DB.ts).  
 Body, params are parsed and can be accessed in request object.  
 If operation cannot be performed, then throw an error from http handler (fastify will send reply with 500 http code). E.g. when getting a non-existent user.  
