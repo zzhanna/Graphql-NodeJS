@@ -75,6 +75,32 @@ test('users', async (t) => {
     }
   );
 
+  await t.test(
+    'POST /users/:id/subscribeTo => failure; body.userId is already a subscriber',
+    async (t) => {
+      const { body: user1 } = await createUser(app);
+      const { body: user2 } = await createUser(app);
+
+      await app.inject({
+        url: `/users/${user1.id}/subscribeTo`,
+        method: 'POST',
+        payload: {
+          userId: user2.id,
+        },
+      });
+
+      const res_subscribeTo = await app.inject({
+        url: `/users/${user1.id}/subscribeTo`,
+        method: 'POST',
+        payload: {
+          userId: user2.id,
+        },
+      });
+
+      t.ok(res_subscribeTo.statusCode > 300);
+    }
+  );
+
   await t.test('POST /users/:id/subscribeTo => success', async (t) => {
     let { body: user1 } = await createUser(app);
     let { body: user2 } = await createUser(app);
@@ -152,6 +178,24 @@ test('users', async (t) => {
         method: 'POST',
         payload: {
           userId: 'fakeId',
+        },
+      });
+
+      t.ok(res_unsubscribeFrom.statusCode > 300);
+    }
+  );
+
+  await t.test(
+    'POST /users/:id/unsubscribeFrom => failure; body.userId is valid but our user is not following him',
+    async (t) => {
+      const { body: user1 } = await createUser(app);
+      const { body: user2 } = await createUser(app);
+
+      const res_unsubscribeFrom = await app.inject({
+        url: `/users/${user1.id}/unsubscribeFrom`,
+        method: 'POST',
+        payload: {
+          userId: user2.id,
         },
       });
 
