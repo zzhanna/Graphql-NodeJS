@@ -13,15 +13,6 @@ export async function createUser(app: any) {
   const body = await res.json();
   return { res, body };
 }
-export async function patchUser(app: any, userId: string, payload: any) {
-  const res = await app.inject({
-    url: `/users/${userId}`,
-    method: 'PATCH',
-    payload,
-  });
-  const body = await res.json();
-  return { res, body };
-}
 
 export async function createProfile(
   app: any,
