@@ -1,40 +1,40 @@
 ## Assignment: Graphql
 
 ### Tasks:
-1. (0.2) Add logic to the restful endpoints (users, posts, profiles, member-types folders in ./src/routes).
-   1. npm run test - 100%
+1. (0.2) Add logic to the restful endpoints (users, posts, profiles, member-types folders in ./src/routes).  
+   1.1. npm run test - 100%  
 2. Add logic to the graphql endpoint (graphql folder in ./src/routes).  
 Constraints and logic for gql queries should be done based on restful implementation.  
 For each subtask provide an example of POST body in the PR. If the properties of the entity are not specified, then return the id of it.
    
    * (0.2) Get gql requests:  
-   1. Get users, profiles, posts, memberTypes.
-   2. Get user, profile, post, memberType by id.
-   3. Get users with their posts, profiles, memberTypes.
-   4. Get user by id with its posts, profile, memberType.
-   5. Get users with their subscribers and subscribers for subscribers (for each user entity add their id and profile).
-   6. Get user by id with its subscribers and subscribers for subscribers (for each user entity add their id and posts).
-   7. Get user by id with those it is following.
-   8. Get posts with their users.
-   9. Get memberTypes with their profiles.  
+   2.1. Get users, profiles, posts, memberTypes.  
+   2.2. Get user, profile, post, memberType by id.  
+   2.3. Get users with their posts, profiles, memberTypes.  
+   2.4. Get user by id with its posts, profile, memberType.  
+   2.5. Get users with their subscribers and subscribers for subscribers (for each user entity add their id and profile).  
+   2.6. Get user by id with its subscribers and subscribers for subscribers (for each user entity add their id and posts).  
+   2.7. Get user by id with those it is following.  
+   2.8. Get posts with their users.  
+   2.9. Get memberTypes with their profiles.  
    * (0.15) Create gql requests:   
-   10. Create user.
-   11. Create profile.
-   12. Create post.
-   13. Create user and profile. If the profile cannot be created then the user should not be saved.
-   14. [InputObjectType](https://graphql.org/graphql-js/type/#graphqlinputobjecttype) for DTOs.
+   2.10. Create user.  
+   2.11. Create profile.  
+   2.12. Create post.  
+   2.13. Create user and profile. If the profile cannot be created then the user should not be saved.  
+   2.14. [InputObjectType](https://graphql.org/graphql-js/type/#graphqlinputobjecttype) for DTOs.  
    * (0.15) Update gql requests:
-   15. Update user.
-   16. Update profile.
-   17. Update post.
-   18. Add subscriber, delete subscriber and get id of updated user.
-   19. [InputObjectType](https://graphql.org/graphql-js/type/#graphqlinputobjecttype) for DTOs.
+   2.15. Update user.  
+   2.16. Update profile.  
+   2.17. Update post.  
+   2.18. Add subscriber, delete subscriber and get id of updated user.  
+   2.19. [InputObjectType](https://graphql.org/graphql-js/type/#graphqlinputobjecttype) for DTOs.  
 
-1. (0.2) Solve n+1 graphql problem with [dataloader](https://www.npmjs.com/package/dataloader) package in all places where it should be used.  
-   1. List where the dataloader was used with links to lines of code.
-2. (0.1) Limit the complexity of the graphql queries by their depth with [graphql-depth-limit](https://www.npmjs.com/package/graphql-depth-limit) package.  
-   1. Show where the rule was used with link to line of code.
-   2. Specify a POST body of gql query that ends with an error due to the operation of the rule.
+3. (0.2) Solve n+1 graphql problem with [dataloader](https://www.npmjs.com/package/dataloader) package in all places where it should be used.  
+   3.1. List where the dataloader was used with links to lines of code.  
+4. (0.1) Limit the complexity of the graphql queries by their depth with [graphql-depth-limit](https://www.npmjs.com/package/graphql-depth-limit) package.   
+   4.1. Show where the rule was used with link to line of code.  
+   4.2. Specify a POST body of gql query that ends with an error due to the operation of the rule.  
 
 ### Description:  
 All dependencies to complete this task are already installed.  
