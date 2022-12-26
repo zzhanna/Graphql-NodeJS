@@ -1,7 +1,7 @@
 import * as crypto from 'node:crypto';
 import DBEntity from './DBEntity';
 
-type UserEntity = {
+export type UserEntity = {
   id: string;
   firstName: string;
   lastName: string;

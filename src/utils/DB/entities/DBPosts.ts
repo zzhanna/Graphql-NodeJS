@@ -1,7 +1,7 @@
 import * as crypto from 'node:crypto';
 import DBEntity from './DBEntity';
 
-type PostEntity = {
+export type PostEntity = {
   id: string;
   title: string;
   content: string;

@@ -1,6 +1,6 @@
 import DBEntity from './DBEntity';
 
-type MemberTypeEntity = {
+export type MemberTypeEntity = {
   id: string;
   discount: number;
   monthPostsLimit: number;
