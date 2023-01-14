@@ -7,7 +7,7 @@ export default abstract class DBEntity<
 
   abstract create(createDto: CreateDTO): Promise<Entity>;
 
-  async findOne(id: string) {
+  async findOne(id: string): Promise<Entity | null> {
     return this.entities.find((o) => o.id === id) ?? null;
   }
 
@@ -28,7 +28,7 @@ export default abstract class DBEntity<
     return this.entities;
   }
 
-  async delete(id: string) {
+  async delete(id: string): Promise<Entity | null> {
     const idx = this.entities.findIndex((o) => o.id === id);
     if (idx === -1) return null;
     const deleted = this.entities[idx];
@@ -36,7 +36,7 @@ export default abstract class DBEntity<
     return deleted;
   }
 
-  async change(id: string, changeDTO: ChangeDTO) {
+  async change(id: string, changeDTO: ChangeDTO): Promise<Entity | null> {
     const idx = this.entities.findIndex((o) => o.id === id);
     if (idx === -1) return null;
     const changed = { ...this.entities[idx], ...changeDTO };
