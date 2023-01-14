@@ -28,16 +28,16 @@ export default class DBMemberTypes extends DBEntity<
       monthPostsLimit: 100,
     });
 
-    const proxyHandler = {
-      apply(target: any) {
+    const forbidOperationTrap: ProxyHandler<any> = {
+      apply(target) {
         throw new Error(
           `forbidden operation: cannot ${target?.name} a member type`
         );
       },
     };
 
-    this.delete = new Proxy(this.delete, proxyHandler);
-    this.create = new Proxy(this.create, proxyHandler);
+    this.delete = new Proxy(this.delete, forbidOperationTrap);
+    this.create = new Proxy(this.create, forbidOperationTrap);
   }
 
   async create(dto: CreateMemberTypeDTO) {
