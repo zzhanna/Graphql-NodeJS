@@ -25,7 +25,7 @@ export default class DBProfiles extends DBEntity<
       ...dto,
       id: crypto.randomUUID(),
     };
-    this.entity.push(created);
+    this.entities.push(created);
     return created;
   }
 }

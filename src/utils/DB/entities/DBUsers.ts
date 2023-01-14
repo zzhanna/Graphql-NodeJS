@@ -31,7 +31,7 @@ export default class DBUsers extends DBEntity<
       subscribedToUserIds: [],
       postIds: [],
     };
-    this.entity.push(created);
+    this.entities.push(created);
     return created;
   }
 }

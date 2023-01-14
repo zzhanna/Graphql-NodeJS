@@ -45,7 +45,7 @@ export default class DBMemberTypes extends DBEntity<
       ...dto,
       profileIds: [],
     };
-    this.entity.push(created);
+    this.entities.push(created);
     return created;
   }
 }
