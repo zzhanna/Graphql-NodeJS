@@ -17,11 +17,12 @@ type ChangeProfileDTO = Partial<Omit<ProfileEntity, 'id' | 'userId'>>;
 
 export default class DBProfiles extends DBEntity<
   ProfileEntity,
-  ChangeProfileDTO
+  ChangeProfileDTO,
+  CreateProfileDTO
 > {
-  async create(createProfileDTO: CreateProfileDTO) {
+  async create(dto: CreateProfileDTO) {
     const created = {
-      ...createProfileDTO,
+      ...dto,
       id: crypto.randomUUID(),
     };
     this.entity.push(created);

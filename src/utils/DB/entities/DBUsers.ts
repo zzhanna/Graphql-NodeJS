@@ -17,10 +17,14 @@ type CreateUserDTO = Omit<
 >;
 type ChangeUserDTO = Partial<Omit<UserEntity, 'id'>>;
 
-export default class DBUsers extends DBEntity<UserEntity, ChangeUserDTO> {
-  async create(createUserDTO: CreateUserDTO) {
+export default class DBUsers extends DBEntity<
+  UserEntity,
+  ChangeUserDTO,
+  CreateUserDTO
+> {
+  async create(dto: CreateUserDTO) {
     const created = {
-      ...createUserDTO,
+      ...dto,
       id: crypto.randomUUID(),
       profileId: null,
       userSubscribedToIds: [],
