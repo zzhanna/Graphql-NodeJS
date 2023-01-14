@@ -1,5 +1,11 @@
-export default class DBEntity<Entity extends { id: string }, ChangeDTO> {
+export default abstract class DBEntity<
+  Entity extends { id: string },
+  ChangeDTO,
+  CreateDTO
+> {
   protected entity: Entity[] = [];
+
+  abstract create(createDto: CreateDTO): Promise<Entity>;
 
   async findOne(id: string) {
     return this.entity.find((o) => o.id === id) ?? null;
