@@ -31,7 +31,7 @@ export default class DBMemberTypes extends DBEntity<
     const forbidOperationTrap: ProxyHandler<any> = {
       apply(target) {
         throw new Error(
-          `forbidden operation: cannot ${target?.name} a member type`
+          `forbidden operation: cannot ${target.name} a member type`
         );
       },
     };
