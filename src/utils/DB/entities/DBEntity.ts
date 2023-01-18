@@ -2,6 +2,21 @@ import * as lodash from 'lodash';
 import { NoRequiredEntity } from '../errors/NoRequireEntity.error';
 
 type UnpackArray<T> = T extends (infer R)[] ? R : never;
+interface Options<T, K extends keyof T> {
+  key: K;
+  equals?: T[K];
+  equalsAnyOf?: T[K][];
+  inArray?: UnpackArray<T[K]>;
+}
+type OptionsEquals<T, K extends keyof T> = Required<
+  Pick<Options<T, K>, 'key' | 'equals'>
+>;
+type OptionsEqualsAnyOf<T, K extends keyof T> = Required<
+  Pick<Options<T, K>, 'key' | 'equalsAnyOf'>
+>;
+type OptionsInArray<T, K extends keyof T> = Required<
+  Pick<Options<T, K>, 'key' | 'inArray'>
+>;
 
 export default abstract class DBEntity<
   Entity extends { id: string },
@@ -12,59 +27,63 @@ export default abstract class DBEntity<
 
   abstract create(createDto: CreateDTO): Promise<Entity>;
 
-  async findOne<K extends keyof Entity>(options: {
-    key: K;
-    equals: Entity[K];
-  }): Promise<Entity | null> {
+  private runChecks<T extends Entity, K extends keyof T>(
+    entity: T,
+    options: Options<T, K>
+  ) {
+    if (options?.equals) {
+      return lodash.isEqual(entity[options.key], options.equals);
+    }
+    if (options?.equalsAnyOf) {
+      return options.equalsAnyOf.some((value) =>
+        lodash.isEqual(entity[options.key], value)
+      );
+    }
+    if (options?.inArray) {
+      const array = entity[options.key] as typeof options.inArray[];
+      return array.some((value) => lodash.isEqual(value, options.inArray));
+    }
+    return false;
+  }
+
+  async findOne<K extends keyof Entity>(
+    option: OptionsEquals<Entity, K>
+  ): Promise<Entity | null>;
+  async findOne<K extends keyof Entity>(
+    option: OptionsEqualsAnyOf<Entity, K>
+  ): Promise<Entity | null>;
+  async findOne<K extends keyof Entity>(
+    options: OptionsInArray<Entity, K>
+  ): Promise<Entity | null>;
+  async findOne<K extends keyof Entity>(
+    options: Options<Entity, K>
+  ): Promise<Entity | null> {
     return (
-      this.entities.find((o) =>
-        lodash.isEqual(o[options.key], options.equals)
-      ) ?? null
+      this.entities.find((entity) => this.runChecks(entity, options)) ?? null
     );
   }
 
-  async findMany<K extends keyof Entity>(options: {
-    key: K;
-    equals: Entity[K];
-  }): Promise<Entity[]>;
-  async findMany<K extends keyof Entity>(option: {
-    key: K;
-    equalsAnyOf: Entity[K][];
-  }): Promise<Entity[]>;
-  async findMany<K extends keyof Entity>(option: {
-    key: K;
-    inArray: UnpackArray<Entity[K]>;
-  }): Promise<Entity[]>;
+  async findMany<K extends keyof Entity>(
+    options: OptionsEquals<Entity, K>
+  ): Promise<Entity[]>;
+  async findMany<K extends keyof Entity>(
+    option: OptionsEqualsAnyOf<Entity, K>
+  ): Promise<Entity[]>;
+  async findMany<K extends keyof Entity>(
+    option: OptionsInArray<Entity, K>
+  ): Promise<Entity[]>;
   async findMany<K extends keyof Entity>(): Promise<Entity[]>;
-  async findMany<K extends keyof Entity>(options?: {
-    key: K;
-    equals?: Entity[K];
-    equalsAnyOf?: Entity[K][];
-    inArray?: UnpackArray<Entity[K]>;
-  }): Promise<Entity[]> {
-    if (options?.equals) {
-      return this.entities.filter((o) =>
-        lodash.isEqual(o[options.key], options.equals)
-      );
+  async findMany<K extends keyof Entity>(
+    options?: Options<Entity, K>
+  ): Promise<Entity[]> {
+    if (!options?.equals && !options?.equalsAnyOf && !options?.inArray) {
+      return this.entities;
     }
-    if (options?.equalsAnyOf) {
-      return this.entities.filter((o) => {
-        return options.equalsAnyOf?.some((value) =>
-          lodash.isEqual(o[options.key], value)
-        );
-      });
-    }
-    if (options?.inArray) {
-      return this.entities.filter((o) => {
-        const array = o[options.key] as typeof options.inArray[];
-        return array.some((value) => lodash.isEqual(value, options.inArray));
-      });
-    }
-    return this.entities;
+    return this.entities.filter((entity) => this.runChecks(entity, options));
   }
 
   async delete(id: string): Promise<Entity> {
-    const idx = this.entities.findIndex((o) => o.id === id);
+    const idx = this.entities.findIndex((entity) => entity.id === id);
     if (idx === -1) throw new NoRequiredEntity('delete');
     const deleted = this.entities[idx];
     this.entities.splice(idx, 1);
@@ -72,7 +91,7 @@ export default abstract class DBEntity<
   }
 
   async change(id: string, changeDTO: ChangeDTO): Promise<Entity> {
-    const idx = this.entities.findIndex((o) => o.id === id);
+    const idx = this.entities.findIndex((entity) => entity.id === id);
     if (idx === -1) throw new NoRequiredEntity('change');
     const changed = { ...this.entities[idx], ...changeDTO };
     this.entities.splice(idx, 1, changed);
