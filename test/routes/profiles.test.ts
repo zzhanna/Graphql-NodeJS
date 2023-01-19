@@ -40,7 +40,7 @@ test('posts', async (t) => {
     const { body: profile1 } = await createProfile(app, user1.id, 'basic');
 
     const { body: receivedProfile1 } = await getProfile(app, profile1.id);
-    t.ok(profile1.id === receivedProfile1!.id);
+    t.ok(profile1.id === receivedProfile1.id);
   });
 
   await t.test(
@@ -85,8 +85,8 @@ test('posts', async (t) => {
 
     const { body: receivedProfile1 } = await getProfile(app, profile1.id);
     t.ok(
-      receivedProfile1!.city === changedCity &&
-        receivedProfile1!.memberTypeId === changedMemberTypeId
+      receivedProfile1.city === changedCity &&
+        receivedProfile1.memberTypeId === changedMemberTypeId
     );
   });
 
