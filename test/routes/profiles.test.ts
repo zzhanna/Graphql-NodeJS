@@ -2,13 +2,13 @@ import { test } from 'tap';
 import { build } from '../helper';
 import { createUser, createProfile, getProfile } from '../utils/requests';
 
-test('posts', async (t) => {
+test('profiles', async (t) => {
   const app = await build(t);
 
   await t.test('GET /profiles/:id => failure; fake params.id', async (t) => {
-    const { res: resReceivedProfile1 } = await getProfile(app, 'fakeId');
+    const { res: resReceivedProfile } = await getProfile(app, 'fakeId');
 
-    t.ok(resReceivedProfile1.statusCode === 404);
+    t.ok(resReceivedProfile.statusCode === 404);
   });
 
   await t.test('POST /profiles => failure; fake body.userId', async (t) => {

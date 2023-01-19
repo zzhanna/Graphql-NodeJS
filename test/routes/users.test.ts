@@ -13,9 +13,9 @@ test('users', async (t) => {
   const app = await build(t);
 
   await t.test('GET /users/:id => failure; fake params.id', async (t) => {
-    const { res: resReceivedUser1 } = await getUser(app, 'fakeId');
+    const { res: resReceivedUser } = await getUser(app, 'fakeId');
 
-    t.ok(resReceivedUser1.statusCode === 404);
+    t.ok(resReceivedUser.statusCode === 404);
   });
 
   await t.test('POST /users => success', async (t) => {
