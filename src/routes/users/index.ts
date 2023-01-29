@@ -21,10 +21,15 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         params: idParamSchema,
       },
     },
-    async function (request): Promise<UserEntity | null> {
+    async function (request): Promise<UserEntity> {
       const id = request.params.id;
       try {
-        return await fastify.db.users.findOne({ key: 'id', equals: id });
+        const user = await fastify.db.users.findOne({ key: 'id', equals: id });
+        if (user) {
+          return user;
+        } else {
+          throw Error;
+        }
       } catch {
         throw fastify.httpErrors.notFound(`User with ${id} not found`);
       }
@@ -85,7 +90,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         params: idParamSchema,
       },
     },
-    async function (request): Promise<UserEntity | undefined> {
+    async function (request): Promise<UserEntity> {
       try {
         const idFromBody = request.body.userId;
         const idFromParams = request.params.id;
@@ -122,7 +127,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         params: idParamSchema,
       },
     },
-    async function (request): Promise<UserEntity | undefined> {
+    async function (request): Promise<UserEntity> {
       const idFromBody = request.body.userId;
       const idFromParams = request.params.id;
       const user = await fastify.db.users.findOne({
@@ -143,6 +148,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
             ),
           });
           return user;
+        } else {
+          throw Error;
         }
       } catch {
         throw fastify.httpErrors.badRequest('Invalid request');
