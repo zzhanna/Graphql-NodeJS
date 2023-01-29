@@ -44,7 +44,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         const idFromBody = request.body.userId;
         const idMemberType = request.body.memberTypeId;
         const existUser = await fastify.db.profiles.findOne({
-          key: 'id',
+          key: 'userId',
           equals: idFromBody,
         });
         const existMemberType = await fastify.db.memberTypes.findOne({
@@ -72,7 +72,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         if (!id) throw Error;
         return await fastify.db.profiles.delete(id);
       } catch {
-        throw fastify.httpErrors.notFound('Not found');
+        throw fastify.httpErrors.badRequest();
       }
     }
   );

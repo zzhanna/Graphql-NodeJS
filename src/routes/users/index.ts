@@ -24,14 +24,17 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     async function (request): Promise<UserEntity> {
       const id = request.params.id;
       try {
-        const user = await fastify.db.users.findOne({ key: 'id', equals: id });
+        const user = await fastify.db.users.findOne({
+          key: 'id',
+          equals: id,
+        });
         if (user) {
           return user;
         } else {
           throw Error;
         }
       } catch {
-        throw fastify.httpErrors.notFound(`User with ${id} not found`);
+        throw fastify.httpErrors.notFound(`User not found`);
       }
     }
   );
@@ -63,21 +66,36 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
     async function (request): Promise<UserEntity> {
       try {
         const idUserDelete = request.params.id;
-        const profiles = await fastify.db.profiles.findMany();
-        if (profiles) {
-          profiles.forEach(async (profile) => {
-            await fastify.db.users.delete(profile.id);
+        const userDelete = await fastify.db.users.delete(idUserDelete);
+
+        const profile = await fastify.db.profiles.findOne({
+          key: 'userId',
+          equals: idUserDelete,
+        });
+        if (profile) await fastify.db.profiles.delete(profile.id);
+
+        const post = await fastify.db.posts.findOne({
+          key: 'userId',
+          equals: idUserDelete,
+        });
+        if (post) await fastify.db.posts.delete(post.id);
+
+        const usersSubscribeToUser = await fastify.db.users.findMany({
+          key: 'subscribedToUserIds',
+          equals: [userDelete.id],
+        });
+
+        usersSubscribeToUser.forEach(async (subscribe) => {
+          await fastify.db.users.change(subscribe.id, {
+            subscribedToUserIds: subscribe.subscribedToUserIds.filter(
+              (subscribeUserId) => subscribeUserId !== idUserDelete
+            ),
           });
-        }
-        const posts = await fastify.db.posts.findMany();
-        if (posts) {
-          posts.forEach(async (post) => {
-            await fastify.db.users.delete(post.id);
-          });
-        }
-        return await fastify.db.users.delete(idUserDelete);
+        });
+
+        return userDelete;
       } catch {
-        throw fastify.httpErrors.badRequest('Invalid request');
+        throw fastify.httpErrors.badRequest();
       }
     }
   );
@@ -102,17 +120,14 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
           key: 'id',
           equals: idFromParams,
         });
-        if (user && userToSubsribeTo) {
-          await fastify.db.users.change(user.id, {
-            subscribedToUserIds: [
-              ...user.subscribedToUserIds,
-              userToSubsribeTo.id,
-            ],
-          });
-          return user;
-        } else {
-          throw Error;
-        }
+        if (!user || !userToSubsribeTo) throw Error;
+        await fastify.db.users.change(user.id, {
+          subscribedToUserIds: [
+            ...user.subscribedToUserIds,
+            userToSubsribeTo.id,
+          ],
+        });
+        return user;
       } catch {
         throw fastify.httpErrors.badRequest('Invalid request');
       }
@@ -138,8 +153,10 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         key: 'id',
         equals: idFromParams,
       });
-      if (!user && !userToUnsubscribeFrom)
+      if (!user || !userToUnsubscribeFrom)
         throw fastify.httpErrors.notFound('User to unsubscribe from not found');
+      if (!user.subscribedToUserIds.includes(userToUnsubscribeFrom.id))
+        throw fastify.httpErrors.badRequest();
       try {
         if (user) {
           await fastify.db.users.change(user?.id, {
@@ -170,7 +187,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       try {
         return await fastify.db.users.change(id, request.body);
       } catch {
-        throw fastify.httpErrors.notFound(`User with ${id} not found`);
+        throw fastify.httpErrors.badRequest(`User with ${id} not found`);
       }
     }
   );
