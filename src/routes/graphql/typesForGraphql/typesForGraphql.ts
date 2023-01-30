@@ -27,6 +27,19 @@ export const UserInput = new GraphQLInputObjectType({
   }),
 });
 
+export const UpdateUserInput = new GraphQLInputObjectType({
+  name: 'UpdateUserInput',
+  fields: () => ({
+    id: { type: new GraphQLNonNull(GraphQLString) },
+    firstName: { type: GraphQLString },
+    lastName: { type: GraphQLString },
+    email: { type: GraphQLString },
+    subscribedToUserIds: {
+      type: new GraphQLList(GraphQLString),
+    },
+  }),
+});
+
 export const profileType = new GraphQLObjectType({
   name: 'Profile',
   fields: () => ({
