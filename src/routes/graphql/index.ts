@@ -194,6 +194,68 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
               return await fastify.db.memberTypes.change(id, body);
             },
           },
+          subscribeToUserId: {
+            type: userType,
+            description: 'Subscribe to userID',
+            args: {
+              userId: {
+                type: new GraphQLNonNull(GraphQLString),
+              },
+              idToSubscribe: {
+                type: new GraphQLNonNull(GraphQLString),
+              },
+            },
+            resolve: async (_, args) => {
+              const user = await fastify.db.users.findOne({
+                key: 'id',
+                equals: args.userId,
+              });
+              const userToSubscribe = await fastify.db.users.findOne({
+                key: 'id',
+                equals: args.idToSubscribe,
+              });
+              if (user && userToSubscribe) {
+                await fastify.db.users.change(user.id, {
+                  subscribedToUserIds: [
+                    ...user.subscribedToUserIds,
+                    userToSubscribe.id,
+                  ],
+                });
+                return user;
+              }
+            },
+          },
+          unsubscribeFromUserId: {
+            type: userType,
+            description: 'Unsubscribe from userID',
+            args: {
+              userId: {
+                type: new GraphQLNonNull(GraphQLString),
+              },
+              idToUnsubscribe: {
+                type: new GraphQLNonNull(GraphQLString),
+              },
+            },
+            resolve: async (_, args) => {
+              const user = await fastify.db.users.findOne({
+                key: 'id',
+                equals: args.userId,
+              });
+              const userToSubscribe = await fastify.db.users.findOne({
+                key: 'id',
+                equals: args.idToUnsubscribe,
+              });
+              if (user && userToSubscribe) {
+                await fastify.db.users.change(user.id, {
+                  subscribedToUserIds: [
+                    ...user.subscribedToUserIds,
+                    userToSubscribe.id,
+                  ],
+                });
+                return user;
+              }
+            },
+          },
         }),
       });
 
