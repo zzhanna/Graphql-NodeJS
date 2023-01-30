@@ -17,7 +17,7 @@ import {
   ProfileInput,
   PostInput,
 } from './typesForGraphql/typesForGraphql';
-import { ProfileEntity } from '../../utils/DB/entities/DBProfiles';
+//import { ProfileEntity } from '../../utils/DB/entities/DBProfiles';
 
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify
@@ -118,7 +118,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
 
       const mutationPart = new GraphQLObjectType({
         name: 'RootMutation',
-        fields: {
+        fields: () => ({
           createUser: {
             type: userType,
             description: 'Create new user',
@@ -134,16 +134,8 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
             args: {
               profile: { type: ProfileInput },
             },
-            resolve: async (_, args, variables) => {
-              const value: ProfileEntity = variables.data;
-              const existuser = await fastify.db.users.findOne({
-                key: 'id',
-                equals: value.userId,
-              });
-              if (existuser) {
-                return await fastify.db.profiles.create(args.profile);
-              }
-            },
+            resolve: async (_, args) =>
+              await fastify.db.profiles.create(args.profile),
           },
           createPost: {
             type: postType,
@@ -151,9 +143,10 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
             args: {
               post: { type: PostInput },
             },
-            resolve: async (_data, args) => await fastify.db.posts.create(args),
+            resolve: async (_data, args) =>
+              await fastify.db.posts.create(args.post),
           },
-        },
+        }),
       });
 
       const schemaForGraphql = new GraphQLSchema({
