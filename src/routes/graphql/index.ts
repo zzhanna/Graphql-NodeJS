@@ -13,6 +13,7 @@ import {
   postType,
   profileType,
   memberType,
+  UserInput,
 } from './typesForGraphql/typesForGraphql';
 
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
@@ -25,7 +26,7 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
         body: graphqlBodySchema,
       },
     },
-    async function (request, reply) {
+    async function (request) {
       const queryPart = new GraphQLObjectType({
         name: 'RootQuery',
         fields: {
@@ -114,7 +115,46 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
 
       const mutationPart = new GraphQLObjectType({
         name: 'RootMutation',
-        fields: {},
+        fields: {
+          createUser: {
+            type: userType,
+            description: 'Create new user',
+            args: {
+              user: { type: UserInput },
+            },
+
+            resolve: async (_, args) => {
+              return await fastify.db.users.create(args.user);
+            },
+          },
+          // createProfile: {
+          //   type: profileType,
+          //   description: 'Create new profile',
+          //   args: {
+          //     avatar: { type: new GraphQLNonNull(GraphQLString) },
+          //     sex: { type: new GraphQLNonNull(GraphQLString) },
+          //     birthday: { type: new GraphQLNonNull(GraphQLString) },
+          //     country: { type: new GraphQLNonNull(GraphQLString) },
+          //     street: { type: new GraphQLNonNull(GraphQLString) },
+          //     city: { type: new GraphQLNonNull(GraphQLString) },
+          //     userId: { type: new GraphQLNonNull(GraphQLString) },
+          //     memberTypeId: { type: new GraphQLNonNull(GraphQLString) },
+          //   },
+          //   resolve: async (_data, args) =>
+          //     await fastify.db.profiles.create(args),
+          // },
+          // createPost: {
+          //   type: postType,
+          //   description: 'Create new post',
+          //   args: {
+          //     id: { type: new GraphQLNonNull(GraphQLString) },
+          //     title: { type: new GraphQLNonNull(GraphQLString) },
+          //     content: { type: new GraphQLNonNull(GraphQLString) },
+          //     userId: { type: new GraphQLNonNull(GraphQLString) },
+          //   },
+          //   resolve: async (_data, args) => await fastify.db.posts.create(args),
+          // },
+        },
       });
 
       const schemaForGraphql = new GraphQLSchema({

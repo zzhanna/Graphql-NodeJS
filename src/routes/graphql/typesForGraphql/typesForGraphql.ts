@@ -4,6 +4,7 @@ import {
   GraphQLString,
   GraphQLList,
   GraphQLInt,
+  GraphQLInputObjectType,
 } from 'graphql';
 
 export const userType = new GraphQLObjectType({
@@ -11,9 +12,18 @@ export const userType = new GraphQLObjectType({
   fields: () => ({
     id: { type: new GraphQLNonNull(GraphQLString) },
     firstName: { type: new GraphQLNonNull(GraphQLString) },
-    lastname: { type: new GraphQLNonNull(GraphQLString) },
+    lastName: { type: new GraphQLNonNull(GraphQLString) },
     email: { type: new GraphQLNonNull(GraphQLString) },
     subscribedToUserIds: { type: new GraphQLList(GraphQLString) },
+  }),
+});
+
+export const UserInput = new GraphQLInputObjectType({
+  name: 'UserInput',
+  fields: () => ({
+    firstName: { type: new GraphQLNonNull(GraphQLString) },
+    lastName: { type: new GraphQLNonNull(GraphQLString) },
+    email: { type: new GraphQLNonNull(GraphQLString) },
   }),
 });
 
