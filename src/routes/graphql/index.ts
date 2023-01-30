@@ -15,6 +15,7 @@ import {
   memberType,
   UserInput,
   ProfileInput,
+  PostInput,
 } from './typesForGraphql/typesForGraphql';
 import { ProfileEntity } from '../../utils/DB/entities/DBProfiles';
 
@@ -118,15 +119,6 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       const mutationPart = new GraphQLObjectType({
         name: 'RootMutation',
         fields: {
-          createUser: {
-            type: userType,
-            description: 'Create new user',
-            args: {
-              user: { type: UserInput },
-            },
-            resolve: async (_, args) =>
-              await fastify.db.users.create(args.user),
-          },
           createProfile: {
             type: profileType,
             description: 'Create new profile',
@@ -144,17 +136,23 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
               }
             },
           },
-          // createPost: {
-          //   type: postType,
-          //   description: 'Create new post',
-          //   args: {
-          //     id: { type: new GraphQLNonNull(GraphQLString) },
-          //     title: { type: new GraphQLNonNull(GraphQLString) },
-          //     content: { type: new GraphQLNonNull(GraphQLString) },
-          //     userId: { type: new GraphQLNonNull(GraphQLString) },
-          //   },
-          //   resolve: async (_data, args) => await fastify.db.posts.create(args),
-          // },
+          createUser: {
+            type: userType,
+            description: 'Create new user',
+            args: {
+              user: { type: UserInput },
+            },
+            resolve: async (_, args) =>
+              await fastify.db.users.create(args.user),
+          },
+          createPost: {
+            type: postType,
+            description: 'Create new post',
+            args: {
+              post: { type: PostInput },
+            },
+            resolve: async (_data, args) => await fastify.db.posts.create(args),
+          },
         },
       });
 
