@@ -17,6 +17,9 @@ import {
   ProfileInput,
   PostInput,
   UpdateUserInput,
+  UpdateProfileInput,
+  UpdatePostInput,
+  UpdateMemberInput,
 } from './typesForGraphql/typesForGraphql';
 //import { ProfileEntity } from '../../utils/DB/entities/DBProfiles';
 
@@ -156,6 +159,39 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
             resolve: async (_, args) => {
               const { id, ...data } = args.userData;
               return await fastify.db.users.change(id, data);
+            },
+          },
+          updateProfile: {
+            type: profileType,
+            description: 'Update information about profile',
+            args: {
+              profileData: { type: UpdateProfileInput },
+            },
+            resolve: async (_, args) => {
+              const { id, ...data } = args.profileData;
+              return await fastify.db.profiles.change(id, data);
+            },
+          },
+          updatePost: {
+            type: postType,
+            description: 'Update information in post',
+            args: {
+              postData: { type: UpdatePostInput },
+            },
+            resolve: async (_, args) => {
+              const { id, ...data } = args.postData;
+              return await fastify.db.posts.change(id, data);
+            },
+          },
+          updateMember: {
+            type: memberType,
+            description: 'Update member information',
+            args: {
+              memberTypeData: { type: UpdateMemberInput },
+            },
+            resolve: async (_, args) => {
+              const { id, ...body } = args.memberTypeData;
+              return await fastify.db.memberTypes.change(id, body);
             },
           },
         }),

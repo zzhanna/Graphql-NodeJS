@@ -69,6 +69,21 @@ export const ProfileInput = new GraphQLInputObjectType({
   }),
 });
 
+export const UpdateProfileInput = new GraphQLInputObjectType({
+  name: 'UpdateProfileInput',
+  fields: () => ({
+    id: { type: new GraphQLNonNull(GraphQLString) },
+    avatar: { type: GraphQLString },
+    sex: { type: GraphQLString },
+    birthday: { type: GraphQLString },
+    country: { type: GraphQLString },
+    street: { type: GraphQLString },
+    city: { type: GraphQLString },
+    userId: { type: GraphQLString },
+    memberTypeId: { type: GraphQLString },
+  }),
+});
+
 export const postType = new GraphQLObjectType({
   name: 'Post',
   fields: () => ({
@@ -86,6 +101,15 @@ export const PostInput = new GraphQLInputObjectType({
     userId: { type: new GraphQLNonNull(GraphQLString) },
   }),
 });
+export const UpdatePostInput = new GraphQLInputObjectType({
+  name: 'UpdatePostInput',
+  fields: () => ({
+    id: { type: new GraphQLNonNull(GraphQLString) },
+    title: { type: GraphQLString },
+    content: { type: GraphQLString },
+    userId: { type: GraphQLString },
+  }),
+});
 
 export const memberType = new GraphQLObjectType({
   name: 'Member',
@@ -93,5 +117,16 @@ export const memberType = new GraphQLObjectType({
     id: { type: new GraphQLNonNull(GraphQLString) },
     discount: { type: new GraphQLNonNull(GraphQLInt) },
     monthPostsLimit: { type: new GraphQLNonNull(GraphQLInt) },
+  }),
+});
+
+export const UpdateMemberInput = new GraphQLInputObjectType({
+  name: 'UpdateMemberInput',
+  fields: () => ({
+    id: {
+      type: new GraphQLNonNull(GraphQLString),
+    },
+    discount: { type: GraphQLInt },
+    monthPostsLimit: { type: GraphQLInt },
   }),
 });
