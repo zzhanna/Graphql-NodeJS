@@ -14,7 +14,9 @@ import {
   profileType,
   memberType,
   UserInput,
+  ProfileInput,
 } from './typesForGraphql/typesForGraphql';
+import { ProfileEntity } from '../../utils/DB/entities/DBProfiles';
 
 const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
   fastify
@@ -122,27 +124,26 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
             args: {
               user: { type: UserInput },
             },
-
-            resolve: async (_, args) => {
-              return await fastify.db.users.create(args.user);
+            resolve: async (_, args) =>
+              await fastify.db.users.create(args.user),
+          },
+          createProfile: {
+            type: profileType,
+            description: 'Create new profile',
+            args: {
+              profile: { type: ProfileInput },
+            },
+            resolve: async (_, args, variables) => {
+              const value: ProfileEntity = variables.data;
+              const existuser = await fastify.db.users.findOne({
+                key: 'id',
+                equals: value.userId,
+              });
+              if (existuser) {
+                return await fastify.db.profiles.create(args.profile);
+              }
             },
           },
-          // createProfile: {
-          //   type: profileType,
-          //   description: 'Create new profile',
-          //   args: {
-          //     avatar: { type: new GraphQLNonNull(GraphQLString) },
-          //     sex: { type: new GraphQLNonNull(GraphQLString) },
-          //     birthday: { type: new GraphQLNonNull(GraphQLString) },
-          //     country: { type: new GraphQLNonNull(GraphQLString) },
-          //     street: { type: new GraphQLNonNull(GraphQLString) },
-          //     city: { type: new GraphQLNonNull(GraphQLString) },
-          //     userId: { type: new GraphQLNonNull(GraphQLString) },
-          //     memberTypeId: { type: new GraphQLNonNull(GraphQLString) },
-          //   },
-          //   resolve: async (_data, args) =>
-          //     await fastify.db.profiles.create(args),
-          // },
           // createPost: {
           //   type: postType,
           //   description: 'Create new post',
