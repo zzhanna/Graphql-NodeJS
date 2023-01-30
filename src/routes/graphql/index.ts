@@ -119,6 +119,15 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
       const mutationPart = new GraphQLObjectType({
         name: 'RootMutation',
         fields: {
+          createUser: {
+            type: userType,
+            description: 'Create new user',
+            args: {
+              user: { type: UserInput },
+            },
+            resolve: async (_, args) =>
+              await fastify.db.users.create(args.user),
+          },
           createProfile: {
             type: profileType,
             description: 'Create new profile',
@@ -135,15 +144,6 @@ const plugin: FastifyPluginAsyncJsonSchemaToTs = async (
                 return await fastify.db.profiles.create(args.profile);
               }
             },
-          },
-          createUser: {
-            type: userType,
-            description: 'Create new user',
-            args: {
-              user: { type: UserInput },
-            },
-            resolve: async (_, args) =>
-              await fastify.db.users.create(args.user),
           },
           createPost: {
             type: postType,
